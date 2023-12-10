@@ -1,0 +1,22 @@
+<html lang="ko">
+<body>
+<a href="/download"> <--  다운로드 페이지로 </a>
+<h2> 파일 업로드 </h2>
+<span>파일 업로드 코드를 작성하십시오.</span>
+<span>파일을 업로드하는 예제에 대해서는 <a href="https://github.com/java-lesson-cbnu/android-lesson-01">이전 예제 레포지토리</a>를 참고하세요. </span>
+<span id="message"> </span>
+<form  method="post"action="api/v1/rest/aws/upload" enctype="multipart/form-data">
+    <input name = "file" type="file" value="파일 선택"/><br/>
+    <input type="submit" value="업로드"/><br/>
+</form>
+</body>
+<script>
+
+        let params = new URLSearchParams(window.location.search);
+        if (params.get("success") != null) {
+            document.getElementById("message").innerHTML = "파일 업로드에 성공하였습니다.";
+        }
+    </script>
+</html>
+
+

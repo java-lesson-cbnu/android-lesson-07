@@ -1,0 +1,48 @@
+<html>
+<head>
+    <title>회원가입</title>
+    <script>
+            function registerUser() {
+                var username = document.getElementById("username").value;
+                var password = document.getElementById("password").value;
+
+                var data = JSON.stringify({ userId: username, password: password });
+
+                fetch('/api/v1/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: data
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            // 회원가입 성공 시 처리
+                            alert('회원가입 성공!');
+                            // 성공 후 다른 페이지로 리다이렉트 등의 처리 가능
+                            window.location.href = '/register_success';
+                        } else if (response.status === 409) {
+                             // 중복 회원일 경우
+                             alert('이미 존재하는 회원입니다.');
+                        } else {
+                            // 회원가입 실패 시 처리
+                            alert('회원가입 실패: ' + response.statusText);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                        alert('회원가입 중 오류 발생');
+                    });
+
+                return false; // 폼 제출 방지
+            }
+        </script>
+</head>
+<body>
+<form onsubmit="return registerUser()">
+    <input type="text" id="username" name="username" placeholder="아이디"/>
+    <input type="password" id="password" name="password" placeholder="비밀번호"/>
+    <input type="submit" value="회원가입"/>
+</form>
+</body>
+</html>

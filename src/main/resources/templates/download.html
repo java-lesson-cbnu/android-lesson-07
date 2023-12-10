@@ -1,0 +1,40 @@
+<html>
+<head>
+    <title>파일 다운로드 페이지</title>
+    <script type="application/javascript">
+        async function loadFileList() {
+            try {
+                const response = await fetch('/api/v1/rest/aws/list');
+                const result = await response.json();
+                const fileListContainer = document.getElementById("file_list_container");
+
+                if (result && result.length > 0) {
+                    result.forEach(fileName => {
+                        let listItem = document.createElement("li");
+                        let link = document.createElement("a");
+                        link.href = "/api/v1/rest/aws/download?filename=" + encodeURIComponent(fileName);
+                        link.textContent = fileName;
+                        listItem.appendChild(link);
+                        fileListContainer.appendChild(listItem);
+                    });
+                } else {
+                    fileListContainer.innerText = "파일이 없습니다.";
+                }
+            } catch (error) {
+                console.error("파일 목록을 가져오는 데 실패했습니다:", error);
+            }
+        }
+
+        window.onload = loadFileList;
+    </script>
+</head>
+<body>
+<a href="/upload"> <--  업로드 페이지로 </a>
+<h2>파일 다운로드 페이지</h2>
+<p>REST 요청을 보내 파일 목록을 불러옵니다:</p>
+<ul id="file_list_container">
+    <!-- 파일 목록이 여기에 삽입됩니다. -->
+</ul>
+<span>파일 목록을 불러오는 예제에 대해서는 <a href="https://github.com/java-lesson-cbnu/android-lesson-01">이전 예제 레포지토리</a>를 참고하세요. </span>
+</body>
+</html>
