@@ -1,0 +1,53 @@
+
+<html>
+<body>
+<h1> 유저 관리 페이지 <a href="/dashboard">(유저 대시보드로 이동)</a></h1>
+<h3><a href="/admin"> 관리자 대시보드로 이동 </a></h3>
+<ul id="userList">
+</ul>
+</body>
+<script>
+    // 유저 삭제 요청 후, 트리거되는 콜백 함수입니다.
+    async function removeUser(userId, successCallback) {
+        // api/v1/user/remove로 POST 요청을 보냅니다.
+        await fetch('/api/v1/user/remove', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            // 유저 ID를 객체로 감싸서 전송합니다.
+            body: JSON.stringify({ userId: userId })
+        }).then(response => {
+            // 만약 응답이 200이라면,
+            if (response.status === 200) {
+                // 콜백 함수를 실행합니다.
+                successCallback();
+            }
+        });
+    }
+
+    // 페이지 로드 시, 비동기로 유저 목록을 불러옵니다.
+    (async () => {
+        // api/v1/user/list로 GET 요청을 보냅니다.
+        const response = await fetch('/api/v1/user/list');
+        // 응답을 JSON으로 파싱합니다.
+        const result = await response.json();
+        // 응답을 순회하며, 유저 목록을 ul#userList에 삽입합니다.
+        result.forEach(userId => {
+            let li = document.createElement("li");
+            li.appendChild(document.createTextNode(userId));
+            let contentRemoveButton = document.createElement("span");
+            contentRemoveButton.innerHTML = "&nbsp;&nbsp;삭제하기";
+            contentRemoveButton.style.color = "red";
+            contentRemoveButton.style.cursor = "pointer";
+            contentRemoveButton.onclick = function () {
+                removeUser(userId, function () {
+                    window.location.reload();
+                });
+            };
+            li.appendChild(contentRemoveButton);
+            document.getElementById("userList").appendChild(li);
+        });
+    })();
+</script>
+</html>
